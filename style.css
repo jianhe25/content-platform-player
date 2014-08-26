@@ -50,11 +50,7 @@ button:hover {
 	cursor: pointer;
 }
 
-#seek-bar {
-	width: 360px;
-}
-
-#volume-bar {
+.volume-bar {
 	width: 60px;
 }
 
@@ -63,7 +59,7 @@ button:hover {
 	margin-right: 3px;
 }
 
-.video-container .progress-bar {
+.video-container .seek-bar {
 	float: left;
 	width: 300px;
 	height: 10px;

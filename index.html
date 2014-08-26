@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
 </head>
 <body>
-	<div class="video-container">
+	<div class="video-container js_video_container">
 		<!-- Video -->
 		<video id="video" width="640" height="365">
 		  <source src="videos/mikethefrog.webm" type="video/webm">
@@ -22,10 +22,9 @@
 		</video>
 		<!-- Video Controls -->
 		<div class="video-control-bar">
-			<div id="play-pause" class="fa fa-play play-button"></div>
-			<!-- <input type="range" id="seek-bar" value="0"> -->
+			<div class="js_play_pause fa fa-play play-button"></div>
 			<div class="seek-bar">
-				<div class="cursor" id="cursor1"> </div>
+				<div class="cursor js_cursor" id="cursor-1"> </div>
 			</div>
 			<!-- <input type="range" id='seek-bar' min='0' max='100' value='0'></input> -->
 			<!-- <span style="position:relative; left:50px">a</span>

@@ -5,29 +5,26 @@ $(document).ready(function(){
 	var video = document.getElementById("video");
 
 	// Buttons
-	var playButton = $("#play-pause");
+	var playButton = $(".js_play_pause");
 	var muteButton = $("#mute");
 	var fullScreenButton = $("#full-screen");
 
 	// Sliders
 	var seekBar = $(".seek-bar");
+	var cursor = $(".js_cursor");
 	var volumeBar = $("#volume-bar");
 
 
-	console.log("playButton = " + playButton);
 	// Event listener for the play/pause button
 	playButton.click(function() {
 		if (video.paused == true) {
 			// Play the video
 			video.play();
-
-			// Update the button text to 'Pause'
 			playButton.removeClass("fa-play");
 			playButton.addClass("fa-pause");
 		} else {
 			// Pause the video
 			video.pause();
-
 			playButton.addClass("fa-play");
 			playButton.removeClass("fa-pause");
 		}
@@ -63,25 +60,45 @@ $(document).ready(function(){
 		}
 	});
 
+/*	
+	//Event listener for the seek bar
+	seekBar.onChange("change", function() {
+		// Calculate the new time
+		var time = video.duration * (seekBar.value / 100);
+		// Update the video time
+		video.currentTime = time;
+	});
+*/
 	
-	// Event listener for the seek bar
-	// seekBar.onChange("change", function() {
-	// 	// Calculate the new time
-	// 	var time = video.duration * (seekBar.value / 100);
-
-	// 	// Update the video time
-	// 	video.currentTime = time;
-	// });
-
 	
-	// // Update the seek bar as the video plays
-	// video.addEventListener("timeupdate", function() {
-	// 	// Calculate the slider value
-	// 	var value = (100 / video.duration) * video.currentTime;
+	seekBar.mousemove(function(e){
+		var offsetX = e.pageX - seekBar.offset().left;
+		console.log("left = " + seekBar.offset().left + "top = " + seekBar.offset().top + "offsetX = " + offsetX);
+		cursor.update(offsetX);
+		var time = video.duration * (offsetX / seekBar.width());
+		video.currentTime = time;
+	}); 
+	
+	// Update the cursor as the video plays
+	video.addEventListener("timeupdate", function() {
+		console.log("seekBar.width = " + seekBar.width());
+		// Calculate the slider value
+		var value = (seekBar.width() / video.duration) * video.currentTime;
+		// Update cursor value
+		cursor.update(value);
+	});
 
-	// 	// Update the slider value
-	// 	seekBar.value = value;
-	// });
+	cursor.update = function (value) {
+		cursor.css("margin-left", value);
+	}
+
+	jQuery(document).bind('keydown', function (event){
+    	console.log("what" + event.keyCode);
+    	// space
+    	if (event.keyCode == 32) {
+			playButton.click();
+		}
+  	});
 
 	// // Pause the video when the seek handle is being dragged
 	// seekBar.addEventListener("mousedown", function() {
