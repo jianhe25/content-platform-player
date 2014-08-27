@@ -11,7 +11,7 @@
 <body>
 	<div class="video-container js_video_container">
 		<!-- Video -->
-		<video id="video" width="640" height="365">
+		<video class="video-content js_video_content">
 		  <source src="videos/mikethefrog.webm" type="video/webm">
 		  <source src="videos/mikethefrog.ogv" type="video/ogv">
 		  <source src="videos/mikethefrog.mp4" type="video/mp4">
@@ -22,17 +22,22 @@
 		</video>
 		<!-- Video Controls -->
 		<div class="video-control-bar">
-			<div class="js_play_pause fa fa-play play-button"></div>
+			<div class="js_play_pause play-button fa fa-play"></div>
 			<div class="seek-bar">
+				<div class="progress js_progress"></div>
 				<div class="cursor js_cursor" id="cursor-1"> </div>
 			</div>
 			<!-- <input type="range" id='seek-bar' min='0' max='100' value='0'></input> -->
 			<!-- <span style="position:relative; left:50px">a</span>
 			<span style="position:relative; left:80px">a</span>
 			 -->
-			<button type="button" id="mute">Mute</button>
-			<input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1">
-			<button type="button" id="full-screen">Full-Screen</button>
+			<i class="js_volume_indicator volume-indicator fa fa-volume-down">
+				<div class="js_volume_bar volume-bar hidden">
+					<div class="volume-bar-inner js_volume_bar_inner"></div>
+				</div>
+			</i>
+			<!-- <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1"> -->
+			<div class="js_full_screen full-screen fa fa-expand"></div>
 		</div>
 	</div>
 	<script src="script.js"></script>
