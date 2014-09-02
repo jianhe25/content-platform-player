@@ -16,8 +16,8 @@ var volumeBarInner = $(".js_volume_bar_inner");
 
 var fullScreenButton = $(".js_full_screen");
 var addAdbreakButton = $(".js_add_adbreak");
-var timeSpent = $(".js_time_spent");
-var timeTotal = $(".js_time_total");
+var timeIndicatorSpent = $(".js_time_spent");
+var timeIndicatorTotal = $(".js_time_total");
 var adbreakHandlerContainer = $(".adbreak-handler-container");
 var adbreakButton = $(".js_adbreak_button");
 var adbreakRemove = $(".js_adbreak_remove");
@@ -47,8 +47,8 @@ var videoController = {
 		// Update cursor value
 		// cursor.update(value);
 		progressBar.update(value);
-		timeSpent.text(utils.convert_value_to_time(video.currentTime));
-		timeTotal.text(utils.convert_value_to_time(video.duration));
+		timeIndicatorSpent.text(utils.convert_value_to_time(video.currentTime));
+		timeIndicatorTotal.text(utils.convert_value_to_time(video.duration));
 	}, 
 };
 
