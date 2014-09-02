@@ -22,24 +22,39 @@
 		</video>
 		<!-- Video Controls -->
 		<div class="video-control-bar">
-			<div class="js_play_pause play-button fa fa-play"></div>
 			<div class="seek-bar">
 				<div class="progress js_progress"></div>
 				<div class="cursor js_cursor" id="cursor-1"> </div>
+				<div class="adbreak adbreak-template js_adbreak"> </div>
 			</div>
-			<!-- <input type="range" id='seek-bar' min='0' max='100' value='0'></input> -->
-			<!-- <span style="position:relative; left:50px">a</span>
-			<span style="position:relative; left:80px">a</span>
-			 -->
-			<i class="js_volume_indicator volume-indicator fa fa-volume-down">
-				<div class="js_volume_bar volume-bar hidden">
-					<div class="volume-bar-inner js_volume_bar_inner"></div>
+			<div class="button-group">
+				<i class="js_play_pause play-button fa fa-play"></i>
+				<div class="time-indicator">
+					<span class="time-spent js_time_spent">0</span> 
+					<span class="time-slash">/</span> 
+					<span class="time-total js_time_total">0</span>
 				</div>
-			</i>
-			<!-- <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1"> -->
-			<div class="js_full_screen full-screen fa fa-expand"></div>
+
+				<div class="js_full_screen full-screen fa fa-expand"></div>
+				<i class="js_volume_indicator volume-indicator fa fa-volume-down">
+					<div class="js_volume_bar volume-bar hidden">
+						<div class="volume-bar-inner js_volume_bar_inner"></div>
+					</div>
+				</i>
+				<!-- <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1"> -->
+			</div>
 		</div>
+		
 	</div>
+	<section class="adbreak-handler-container">
+		<button class="js_add_adbreak">+adbreak</button>
+		<div class="js_adbreak_handler adbreak-handler adbreak-handler-template">
+			<input type="button" value="adbreak" class="js_adbreak_button">
+			</input>
+			<input type="button" value="-" class="js_adbreak_remove"></input>
+		</div>
+	</section>
+
 	<script src="script.js"></script>
 </body>
 </html>
