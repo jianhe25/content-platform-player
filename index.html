@@ -20,10 +20,11 @@
 		    <a href="videos/mikethefrog.mp4">Download</a> the video instead.
 		  </p>
 		</video>
+		
 		<!-- Video Controls -->
 		<div class="video-control-bar">
 			<div class="seek-bar">
-				<div class="progress js_progress"></div>
+				<div class="progress-bar js_progress_bar"></div>
 				<div class="cursor js_cursor" id="cursor-1"> </div>
 				<div class="adbreak adbreak-template js_adbreak"> </div>
 			</div>
@@ -44,7 +45,10 @@
 				<!-- <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1"> -->
 			</div>
 		</div>
-		
+
+		<div class="caption js_caption">
+			work
+		</div>
 	</div>
 	<section class="adbreak-handler-container">
 		<button class="js_add_adbreak">+adbreak</button>
@@ -54,7 +58,12 @@
 			<input type="button" value="-" class="js_adbreak_remove"></input>
 		</div>
 	</section>
-
+	<aside class="sidebar">
+		<div class="js_caption_handler"> 
+			<button class="js_caption_timestamp">0:12;0</button>
+			<input type="text" value="first line of caption" size="100"> </input> 
+		</div>
+	</aside>
 	<script src="script.js"></script>
 </body>
 </html>
