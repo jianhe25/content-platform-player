@@ -1,0 +1,38 @@
+<table width="900px">
+   <tr>
+     <th>State</th>
+     <th>Description</th>
+   </tr>
+   <tr>
+     <td>PLAYING</td>
+     <td>Player is in playing state but not receive any time update event.</td>
+   </tr>
+   <tr>
+     <td>AUTO_PAUSED_WITHOUT_ENOUGH_BUFFER</td>
+     <td>When rebuffer happens, player is paused automatically and don't have enough buffer to play.</td>
+   </tr>
+   <tr>
+     <td>AUTO_PAUSED_WITH_ENOUGH_BUFFER</td>
+     <td>When rebuffer happens, player is paused automatically and have enough buffer to play.</td>
+   </tr>
+   <tr>
+     <td>SEEKING_WITHOUT_ENOUGH_BUFFER</td>
+     <td>Player don't have enough buffer to player after seeking.</td>
+   </tr>
+   <tr>
+     <td>SEEKING_WITH_ENOUGH_BUFFER_TO_PLAYING</td>
+     <td>Player has enough buffer to play after seeking but still not enter playing state.</td>
+   </tr>
+   <tr>
+     <td>VIDEO_END</td>
+     <td>Player has finished to video but still not receive the video end event.</td>
+   </tr>
+   <tr>
+     <td>HTTP_LOADING</td>
+     <td>Http player is in loading state.</td>
+   </tr>
+   <tr>
+     <td>SEEKING_WITH_ENOUGH_BUFFER_TO_RESUMING</td>
+     <td>Player will seek at first when resuming, and have enought buffer to resume.</td>
+   </tr>
+</table>
