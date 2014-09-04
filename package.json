@@ -1,0 +1,9 @@
+{
+	"name": "contentPlatformPlayer",
+	"version": "0.0.1",
+	"description": "content platform player",
+	"dependencies": {
+		"mime": "~1.2.7"
+	},
+	"private": true
+}
