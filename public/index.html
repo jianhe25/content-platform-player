@@ -6,12 +6,15 @@
 
 	<link rel="stylesheet" href="style.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="./bower_components/jquery/dist/jquery.js"></script>
+	<script src="./js/core.js"></script>
+	<script src="./js/script.js"></script>
 </head>
 <body>
+	<!-- <input type="button" value="load" onclick="load()"/> -->
 	<div class="video-container js_video_container">
 		<!-- Video -->
-		<video class="video-content js_video_content">
+		<video class="video-content js_video_content" id="video">
 		  <source src="static/videos/mikethefrog.webm" type="video/webm">
 		  <source src="static/videos/mikethefrog.ogv" type="video/ogv">
 		  <source src="static/videos/mikethefrog.mp4" type="video/mp4">
@@ -64,6 +67,5 @@
 			<input type="text" value="1st line of caption" size="100"> </input> 
 		</section>
 	</aside>
-	<script src="script.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ function sendFile(response, filePath, fileContents) {
 }
 
 function serverStatic(response, cache, absPath) {
-	if (cache[absPath]) {
+	if (false) {
 		sendFile(response, absPath, cache[absPath]);
 	} else {
 		fs.exists(absPath, function(exists) {

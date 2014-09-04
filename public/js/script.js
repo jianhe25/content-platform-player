@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	
 // Video
-var video = document.getElementsByClassName("js_video_content")[0];
+var video = document.getElementById('video');
 
 // Buttons
 var playButton = $(".js_play_pause");
@@ -25,13 +25,21 @@ var captionHandler = $(".js_caption_handler");
 var captionTimestamp = $(".js_caption_timestamp");
 var caption = $(".js_caption");
 
+var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
+
+function seek(position) {
+	videoPlayer.seek(position);
+}
+
 var videoController = (function() {
 	var my = {};
 
 	my.init = function() {
+		videoPlayer.load('http://ads.hulu.com/published/IO116612/FREEDOM_AW_D_ZENITH_96231_VS_Hulu_AdsTranscode_16x9_569579_4047235__4047235_trimmed.mp4');
 		// Update the cursor as the video plays
 		video.addEventListener("timeupdate", onVideoTimeUpdate);
 		video.addEventListener("ended", my.pause);
+		this.play();
 		playButton.click(onPlayButtonClick);
 	};
 	
@@ -43,7 +51,7 @@ var videoController = (function() {
 		progressBar.update(value);
 		timeIndicatorSpent.text(utils.convertValueToTime(video.currentTime));
 		timeIndicatorTotal.text(utils.convertValueToTime(video.duration));
-		console.log("video.seekable = " + video.seekable.start(0) + " " + video.seekable.end(0));
+		// console.log("video.seekable = " + video.seekable.start(0) + " " + video.seekable.end(0));
 		// console.log("video.canplayback() = " + video.canPlayType());
 	};
 
