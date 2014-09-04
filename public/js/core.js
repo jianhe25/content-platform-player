@@ -27,6 +27,7 @@
     },
 
     actualLog: function(messages, method) {
+      return;
       if (method) {
         if (LEVEL_TURN[defaultLevel] > LEVEL_TURN[method]) {
           return;
