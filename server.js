@@ -45,11 +45,16 @@ function serverStatic(response, cache, absPath) {
 
 var server = http.createServer(function(request, response) {
 	var filePath = false;
+
 	if (request.url == '/') {
 		filePath = 'public/index.html';
 	} else {
 		filePath = 'public' + request.url;
 	}
+	if (filePath.indexOf('?') != -1) {
+		filePath = filePath.substring(0, filePath.indexOf('?'));
+	}
+	console.log('GET ' + filePath);
 	var absPath = './' + filePath;
 	serverStatic(response, cache, absPath);
 });
