@@ -27,19 +27,18 @@ var $caption = $('.js_caption');
 
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
-function seek(position) {
-  videoPlayer.seek(position);
-}
 
 var videoController = (function() {
   var my = {};
 
   my.init = function() {
+    // videoPlayer.load('static/videos/mikethefrog.mp4');
     videoPlayer.load('http://ads.hulu.com/published/IO116612/FREEDOM_AW_D_ZENITH_96231_VS_Hulu_AdsTranscode_16x9_569579_4047235__4047235_trimmed.mp4');
     // Update the cursor as the video plays
     video.addEventListener('timeupdate', onVideoTimeUpdate);
     video.addEventListener('ended', my.pause);
     this.play();
+
     $playButton.click(onPlayButtonClick);
   };
   
@@ -105,7 +104,6 @@ var seekBarController = {
     $cursor.move(offsetX);
     var time = video.duration * (offsetX / $(this).width());
     video.currentTime = time;
-    console.log('time = ' + time + ' video.currentTime = ' + video.currentTime);
   },
   onSeekBarMouseMove: function(e) {
     var offsetX = e.pageX - $(this).offset().left;
@@ -306,11 +304,9 @@ var captionController = (function(){
   };
 
   function binarySearch(captions, nowTime) {
-    console.log(captions.length);
     var l = 0, r = captions.length - 1;
     while (l <= r) {
       var mid = Math.round( (l+r) / 2 );
-      console.log(mid, captions[mid]);
       if (captions[mid].compare(nowTime) == -1) {
         l = mid + 1;
       } else {
