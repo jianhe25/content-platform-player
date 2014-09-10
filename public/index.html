@@ -29,7 +29,7 @@
 			<div class="seek-bar">
 				<div class="progress-bar js_progress_bar"></div>
 				<div class="cursor js_cursor" id="cursor-1"> </div>
-				<div class="adbreak adbreak-template js_adbreak"> </div>
+				<div class="adbreak hidden js_adbreak"> </div>
 			</div>
 			<div class="button-group">
 				<i class="js_play_pause play-button fa fa-play"></i>
@@ -39,11 +39,11 @@
 					<span class="time-total js_time_total">0</span>
 				</div>
 
-				<div class="js_full_screen full-screen fa fa-expand"></div>
-				<i class="js_volume_indicator volume-indicator fa fa-volume-down">
-					<div class="js_volume_bar volume-bar hidden">
+				<i class="js_full_screen full-screen fa fa-expand"></i>
+				<div class="js_volume_bar volume-bar">
 						<div class="volume-bar-inner js_volume_bar_inner"></div>
-					</div>
+				</div>
+				<i class="js_volume_indicator volume-indicator fa fa-volume-down">
 				</i>
 				<!-- <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1"> -->
 			</div>
@@ -55,16 +55,16 @@
 	</div>
 	<section class="adbreak-handler-container">
 		<button class="js_add_adbreak">+adbreak</button>
-		<div class="js_adbreak_handler adbreak-handler adbreak-handler-template">
+		<div class="js_adbreak_handler adbreak-handler hidden">
 			<input type="button" value="adbreak" class="js_adbreak_button">
 			</input>
 			<input type="button" value="-" class="js_adbreak_remove"></input>
 		</div>
 	</section>
 	<aside>
-		<section class="js_caption_handler"> 
+		<section class="js_caption_handler hidden"> 
 			<button class="js_caption_timestamp">0:12;23</button>
-			<input type="text" value="1st line of caption" size="100"> </input> 
+			<input type="text" value="demo caption line" size="100"> </input> 
 		</section>
 	</aside>
 </body>

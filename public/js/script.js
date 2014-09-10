@@ -18,12 +18,14 @@ var $fullScreenButton = $('.js_full_screen');
 var $addAdbreakButton = $('.js_add_adbreak');
 var $timeIndicatorSpent = $('.js_time_spent');
 var $timeIndicatorTotal = $('.js_time_total');
-var $adbreakHandlerContainer = $('.adbreak-handler-container');
+
+var $adbreakHandler = $('.js_adbreak_handler');
 var $adbreakButton = $('.js_adbreak_button');
 var $adbreakRemove = $('.js_adbreak_remove');
 var $captionHandler = $('.js_caption_handler');
 var $captionTimestamp = $('.js_caption_timestamp');
 var $caption = $('.js_caption');
+var $videoContent = $('.js_video_content');
 
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
@@ -121,18 +123,10 @@ var seekBarController = {
 
 var volumeController = {
   init: function() {
-    $volumeIndicator.mouseenter(this.onVolumeIndicatorMouseEnter);
-    $volumeIndicator.mouseleave(this.onVolumeIndicatorMouseLeave);
     $volumeBar.mousedown(this.onVolumeBarMouseDown)
          .mouseup(this.onVolumeBarMouseUp)
          .mouseleave(this.onVolumeBarMouseLeave);
-    video.volume = ($volumeBar.height() - $volumeBarInner.height()) / $volumeBar.height();
-  },
-  onVolumeIndicatorMouseEnter: function() {
-    $volumeBar.removeClass('hidden');
-  },
-  onVolumeIndicatorMouseLeave: function() {
-    $volumeBar.addClass('hidden');
+    video.volume = ($volumeBarInner.width()) / $volumeBar.width();
   },
   onVolumeBarMouseDown: function(e) {
     volumeController.updateVolumeInnerBar(e);
@@ -145,9 +139,9 @@ var volumeController = {
     $volumeBar.unbind('mousemove');
   },
   updateVolumeInnerBar: function(e) {
-    var offsetY = e.pageY - $volumeBar.offset().top;
-    $volumeBarInner.css('height', offsetY);
-    var volume = ($volumeBar.height() - offsetY) / $volumeBar.height();
+    var offsetX = e.pageX - $volumeBar.offset().left;
+    $volumeBarInner.css('width', offsetX);
+    var volume = (offsetX) / $volumeBar.width();
     video.volume = volume;
     /*
       if (volume > 0.5) {
@@ -189,23 +183,24 @@ var adBreakController = {
     $adbreakRemove.click(this.onAdbreakRemoveClick);
   },
   onAddAdBreakButtonClick: function(e) {
-    var position = cursor.css('left');
+    var position = $cursor.css('left');
     position = parseInt(position) - 1;
     console.log('position: ' + position);
     this.numAdbreaks++;
     var $new_adbreak = $('.adbreak').first().clone(/*withDataAndEvents=*/true);
     $new_adbreak.attr('id', 'adbreak_' + this.numAdbreaks);
     $new_adbreak.css('left', position);
-    $new_adbreak.removeClass('adbreak-template');
-    $new_adbreak.appendTo(seekBar);
+    $new_adbreak.show();
+    $new_adbreak.appendTo($seekBar);
 
-    var $new_adbreak_handler = $('.js_adbreak_handler').first().clone(/*withDataAndEvents=*/true);
-    var adbreak_time = (position+1) / seekBar.width() * video.duration;
+    var $new_adbreak_handler = $adbreakHandler.clone(/*withDataAndEvents=*/true);
+    var adbreak_time = (position+1) / $seekBar.width() * video.duration;
     $new_adbreak_handler.children('.js_adbreak_button').val( utils.convertValueToTimeMs(adbreak_time) );
     $new_adbreak_handler.removeClass('adbreak-handler-template');
 
     $new_adbreak_handler.data('index', this.numAdbreaks);
-    $new_adbreak_handler.appendTo(adbreakHandlerContainer);
+    $new_adbreak_handler.appendTo($adbreakHandler.parent());
+    $new_adbreak_handler.show();
   },
   onAdBreakButtonClick: function(e) {
     console.log('adbreakHandler = ' + utils.convertTimeToValueMs($(this).val()) );
@@ -252,55 +247,49 @@ var captionController = (function(){
   };
 
   my.init = function() {
-    prepareTestCaption();
     loadCaption();
     $captionTimestamp.click(function(e) {
-      $caption.text($(this).next().val());
-      video.currentTime = utils.convertTimeToValueMs( $(this).text() );
+      var captionTime = utils.convertTimeToValueMs( $(this).text() );
+      var caption = binarySearch(captions, new Caption(captionTime));
+      caption.line = $(this).next().val();
+      video.currentTime = captionTime;
+      $caption.html($(this).next().val());
+      $caption.css("left", ($videoContent.width() - $caption.width()) / 2);
     });
   };
 
-  function prepareTestCaption() {
-    for (var i = 2; i <= 10; ++i) {
+  function prepareCaptionPanel() {
+    console.log(captions.length);
+    for (var i = 0; i < Math.min(10, captions.length); ++i) {
       var $new_caption_handler = $captionHandler.clone(/*withDataAndEvents=*/true, /*deepWithDataAndEvents=*/true);
-      var old_time = $new_caption_handler.children('.js_caption_timestamp').text();
-      var new_time = utils.convertValueToTimeMs(utils.convertTimeToValueMs(old_time) + i);
-      $new_caption_handler.children('input').val(i + '-th line of caption');
+      var new_time = utils.convertValueToTimeMs(captions[i].timestamp + 0.01);
+      $new_caption_handler.children('input').val(captions[i].line);
       $new_caption_handler.children('.js_caption_timestamp').text(new_time);
       $new_caption_handler.appendTo($captionHandler.parent());
+      $new_caption_handler.show();
     }
   };
 
   function loadCaption() {
     console.log('starting load caption');
     $.ajax({
-      url: 'static/captions/test.smi',
+      url: 'static/captions/caption2.smi',
       type: 'GET',
       dataType: 'text'
     })
     .done(function(data) {
       var jq = $(data);
       var nodes = jq.children('sync');
-
       for (var i = 0; i < nodes.length; ++i) {
-        var timestamp = parseInt($(nodes[i]).attr("start")) / 10000.0;
-        var line = $(nodes[i]).html();
+        var timestamp = parseInt($(nodes[i]).attr("start")) / 1000.0;
+        var line = $(nodes[i]).children('p').html();
         captions.push( new Caption(timestamp, line) );
       }
-
-      // var domNodes = $.parseHTML(data);
-      // // domNodes.length is 1
-      // var html = domNodes[0];
-      // nodes = html.childNodes;
-      // console.log(nodes);
-      // // for (var id in html) {
-      //   if (html[id] != null)
-      //   console.log(id + " : " + html[id].toString());
-      // }
+      console.log('Load caption ajax call successfully!', captions.length);
+      prepareCaptionPanel();
     }).fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("loading caption failed");
+      console.log("Error! loading caption failed");
     });
-    console.log('end load caption ajax call');
   };
 
   function binarySearch(captions, nowTime) {
@@ -323,37 +312,45 @@ var captionController = (function(){
     if (captions.length > 0) {
       var caption = binarySearch(captions, new Caption(time));
       $caption.html(caption.line);
+      $caption.css("left", ($videoContent.width() - $caption.width()) / 2);
+      // console.log("width = " + $caption.width() $videoContainer.width());
+      // $caption.css("left", );
     }
   };
   return my;
 })();
 
 var utils = {
-  PaddingZero: function (num, size) {
+  headPaddingZero: function (num, size) {
     var s = num.toString();
     while (s.length < size) s = '0' + s;
+    return s;
+  },
+  tailPaddingZero: function (num, size) {
+    var s = num.toString();
+    while (s.length < size) s = s + '0';
     return s;
   },
   convertValueToTime: function (value) {
     var seconds =  parseInt(value);
     if (seconds < 60)
-      result = '0:' + utils.PaddingZero(seconds, 2);
+      result = '0:' + this.headPaddingZero(seconds, 2);
     else if (seconds < 3600) {
       minutes = seconds / 60;
       seconds = seconds % 60;
-      result = minutes + ':' + utils.PaddingZero(seconds,2);
+      result = minutes + ':' + this.headPaddingZero(seconds,2);
     } else {
       hours = seconds / 3600;
       minutes = seconds / 60 % 60;
       seconds = seconds % 60;
-      result = hours + ':' + utils.PaddingZero(minutes,2) + ':' + utils.PaddingZero(seconds,2);;
+      result = hours + ':' + this.headPaddingZero(minutes,2) + ':' + this.headPaddingZero(seconds,2);;
     }
     return result;
   },
   convertValueToTimeMs: function(value) {
-    var result = utils.convertValueToTime(value);
+    var result = this.convertValueToTime(value);
     var ms = parseInt(value * 100);
-    return result + ';' + (ms % 100);
+    return result + ';' + this.tailPaddingZero(ms % 100, 2);
   },
   convertTimeToValue: function(time) {
     var value = 0;
