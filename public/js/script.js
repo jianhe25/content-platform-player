@@ -2,6 +2,9 @@ $(document).ready(function(){
   
 // Video
 var video = document.getElementById('video');
+var videoContainer = document.getElementsByClassName('js_video_container').item(0);
+
+console.log("video-container:", videoContainer);
 
 // Buttons
 var $playButton = $('.js_play_pause');
@@ -26,6 +29,7 @@ var $captionHandler = $('.js_caption_handler');
 var $captionTimestamp = $('.js_caption_timestamp');
 var $caption = $('.js_caption');
 var $videoContent = $('.js_video_content');
+var $videoContainer = $('.js_video_container');
 
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
@@ -78,12 +82,26 @@ var videoController = (function() {
 
 // Event listener for the full-screen button
 var onFullScreenButtonClick = function() {
-  if (video.requestFullscreen) {
-    video.requestFullscreen();
-  } else if (video.mozRequestFullScreen) {
-    video.mozRequestFullScreen(); // Firefox
-  } else if (video.webkitRequestFullscreen) {
-    video.webkitRequestFullscreen(); // Chrome and Safari
+  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
+  if (!fullscreenEnabled) 
+    return;
+  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+  if (fullscreenElement == null) {
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) {
+      video.mozRequestFullScreen(); // Firefox
+    } else if (video.webkitRequestFullscreen) {
+      video.webkitRequestFullscreen(); // Chrome and Safari
+    }
+  } else {
+    if(document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if(document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
   }
 };
 $fullScreenButton.click(onFullScreenButtonClick);
@@ -313,8 +331,6 @@ var captionController = (function(){
       var caption = binarySearch(captions, new Caption(time));
       $caption.html(caption.line);
       $caption.css("left", ($videoContent.width() - $caption.width()) / 2);
-      // console.log("width = " + $caption.width() $videoContainer.width());
-      // $caption.css("left", );
     }
   };
   return my;
