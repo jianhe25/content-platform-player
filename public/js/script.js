@@ -4,7 +4,7 @@ $(document).ready(function(){
 var video = document.getElementById('video');
 var videoContainer = document.getElementsByClassName('js_video_container').item(0);
 
-console.log("video-container:", videoContainer);
+console.log('video-container:', videoContainer);
 
 // Buttons
 var $playButton = $('.js_play_pause');
@@ -34,6 +34,10 @@ var $videoContainer = $('.js_video_container');
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
 
+var colors = {
+  EDIT_CURSOR_HIGHLIGHT: '#F79494'
+};
+
 var videoController = (function() {
   var my = {};
 
@@ -49,8 +53,9 @@ var videoController = (function() {
   };
   
   function onVideoTimeUpdate() {
+    console.log("video.currentTime = ", video.currentTime);
     // Calculate the slider value
-    var value = ($seekBar.width() / video.duration) * video.currentTime;
+    var value = (video.currentTime / video.duration) * $seekBar.width();
     // Update cursor value
     $progressBar.update(value);
     $timeIndicatorSpent.text(utils.convertValueToTime(video.currentTime));
@@ -141,20 +146,15 @@ var seekBarController = {
 
 var volumeController = {
   init: function() {
-    $volumeBar.mousedown(this.onVolumeBarMouseDown)
-         .mouseup(this.onVolumeBarMouseUp)
-         .mouseleave(this.onVolumeBarMouseLeave);
+    $volumeBar.mousedown(function(e) {
+      volumeController.updateVolumeInnerBar(e);
+      $(this).on('mousemove', volumeController.updateVolumeInnerBar);
+    }).mouseup(function() {
+      $(this).unbind('mousemove');
+    }).mouseleave(function(){
+      $(this).unbind('mousemove');
+    });
     video.volume = ($volumeBarInner.width()) / $volumeBar.width();
-  },
-  onVolumeBarMouseDown: function(e) {
-    volumeController.updateVolumeInnerBar(e);
-    $volumeBar.on('mousemove', volumeController.updateVolumeInnerBar);
-  },
-  onVolumeBarMouseUp: function(e) {
-    $volumeBar.unbind('mousemove');
-  },
-  onVolumeBarMouseLeave: function(e) {
-    $volumeBar.unbind('mousemove');
   },
   updateVolumeInnerBar: function(e) {
     var offsetX = e.pageX - $volumeBar.offset().left;
@@ -237,11 +237,11 @@ function getMethods(obj) {
   var result = [];
   for (var id in obj) {
     try {
-      if (typeof(obj[id]) == "function") {
-        console.log(id + ": " + obj[id].toString());
+      if (typeof(obj[id]) == 'function') {
+        console.log(id + ': ' + obj[id].toString());
       }
     } catch (err) {
-      console.log(id + ": inaccessible");
+      console.log(id + ': inaccessible');
     }
   }
   return result;
@@ -272,7 +272,7 @@ var captionController = (function(){
       caption.line = $(this).next().val();
       video.currentTime = captionTime;
       $caption.html($(this).next().val());
-      $caption.css("left", ($videoContent.width() - $caption.width()) / 2);
+      $caption.css('left', ($videoContent.width() - $caption.width()) / 2);
     });
   };
 
@@ -299,14 +299,14 @@ var captionController = (function(){
       var jq = $(data);
       var nodes = jq.children('sync');
       for (var i = 0; i < nodes.length; ++i) {
-        var timestamp = parseInt($(nodes[i]).attr("start")) / 1000.0;
+        var timestamp = parseInt($(nodes[i]).attr('start')) / 1000.0;
         var line = $(nodes[i]).children('p').html();
         captions.push( new Caption(timestamp, line) );
       }
       console.log('Load caption ajax call successfully!', captions.length);
       prepareCaptionPanel();
     }).fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("Error! loading caption failed");
+      console.log('Error! loading caption failed');
     });
   };
 
@@ -321,7 +321,7 @@ var captionController = (function(){
       }
     }
     if (l == 0)
-      return new Caption(0, "");
+      return new Caption(0, '');
     else
       return captions[l-1];
   };
@@ -330,9 +330,84 @@ var captionController = (function(){
     if (captions.length > 0) {
       var caption = binarySearch(captions, new Caption(time));
       $caption.html(caption.line);
-      $caption.css("left", ($videoContent.width() - $caption.width()) / 2);
+      $caption.css('left', ($videoContent.width() - $caption.width()) / 2);
     }
   };
+  return my;
+})();
+
+var editBarController = (function() {
+  var my = {};
+  var $leftCursor = $('.js_edit_cursor_left');
+  var $rightCursor = $('.js_edit_cursor_right');
+  var $editBar = $('.js_edit_bar');
+  var $editBarInner = $('.js_edit_bar_inner');
+  var $leftCursorTime = $leftCursor.children('.edit-cursor-time');
+  var $rightCursorTime = $rightCursor.children('.edit-cursor-time');
+
+  my.init = function() {
+    console.log('leftCursor.offsetx = ', $leftCursor.css('left'));
+    console.log('leftCursor.width = ', $leftCursor.width());
+    $editBarInner.css('left', parseInt($leftCursor.css('left')) + $leftCursor.width());
+    $editBarInner.css('width', $rightCursor.offset().left - $editBarInner.offset().left);
+    var oldCursorColor = $leftCursor.css('background-color');
+
+    var isLeftEditbarMouseDown = false;
+    var isRightEditbarMouseDown = false;
+    /* Make edit-cursor draggable */
+    $editBar.on('mousedown', '.js_edit_cursor_left', function(e) {
+      isLeftEditbarMouseDown = true;
+      $editBar.mousemove(function(e){
+        if (e.pageX < $rightCursor.offset().left - $rightCursor.width()) {
+          var offsetX = e.pageX - $(this).offset().left;
+          $leftCursor.css('left', offsetX);
+          $leftCursor.css('background-color', colors.EDIT_CURSOR_HIGHLIGHT);
+          $editBarInner.css('left', offsetX + $leftCursor.width());
+          $editBarInner.css('width', $rightCursor.offset().left - $editBarInner.offset().left);
+          var time = offsetX / $editBar.width() * video.duration;
+          $leftCursorTime.text(utils.convertValueToTime(time));
+        }
+      }).mouseup(function() {
+        $editBar.unbind('mousemove');
+        $leftCursor.css('background-color', oldCursorColor);
+        // videoController.pause();
+        var time = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
+        console.log("time = ", time);
+        video.currentTime = time;
+        console.log("after mouse up video.currentTime = ", video.currentTime );
+     });
+    });
+
+    $editBar.on('mousedown', '.js_edit_cursor_right', function(e) {
+      $editBar.mousemove(function(e){
+        if (e.pageX > $leftCursor.offset().left + $leftCursor.width()) {
+          var offsetX = e.pageX - $(this).offset().left;
+          $rightCursor.css('left', offsetX);
+          $rightCursor.css('background-color', colors.EDIT_CURSOR_HIGHLIGHT);
+          $editBarInner.css('right', offsetX - $rightCursor.width());
+          $editBarInner.css('width', $rightCursor.offset().left - $editBarInner.offset().left);
+          var time = offsetX / $editBar.width() * video.duration;
+          $rightCursorTime.text(utils.convertValueToTime(time));
+        }
+      }).mouseup(function() {
+        $editBar.unbind('mousemove');
+        $rightCursor.css('background-color', oldCursorColor);
+        // videoController.pause();
+        var time = ($rightCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
+        console.log("time = ", time);
+        video.currentTime = time;
+        console.log("after mouse up video.currentTime = ", video.currentTime );
+     });
+    });
+
+    $('.js_preview_button').click(function() {
+      var time = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
+      video.currentTime = time;
+      video.currentTime = 
+      videoController.play();
+    });
+  };
+
   return my;
 })();
 
@@ -395,7 +470,8 @@ var startControllers = [videoController,
                         volumeController, 
                         keyController,
                         adBreakController,
-                        captionController];
+                        captionController,
+                        editBarController];
 
 startControllers.forEach( function(controller) {
   controller.init();

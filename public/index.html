@@ -28,7 +28,7 @@
 		<div class="video-control-bar">
 			<div class="seek-bar">
 				<div class="progress-bar js_progress_bar"></div>
-				<div class="cursor js_cursor" id="cursor-1"> </div>
+				<div class="cursor js_cursor"> </div>
 				<div class="adbreak hidden js_adbreak"> </div>
 			</div>
 			<div class="button-group">
@@ -49,9 +49,23 @@
 			</div>
 		</div>
 		<div class="caption js_caption">
-			null caption
 		</div>
 	</div>
+
+	<div class="edit-bar-container">
+			<div class="edit-bar js_edit_bar">
+				<div class="edit-cursor-left js_edit_cursor_left">
+					<p class="edit-cursor-time">0:00</p>
+				</div>
+				<div class="edit-bar-inner js_edit_bar_inner"></div>
+				<div class="edit-cursor-right js_edit_cursor_right">
+					<p class="edit-cursor-time">59:00</p>
+				</div>
+			</div>
+		</div>
+	<input type="button" value="preview" class="js_preview_button">
+	</input>
+	
 	<section class="adbreak-handler-container">
 		<button class="js_add_adbreak">+adbreak</button>
 		<div class="js_adbreak_handler adbreak-handler hidden">
