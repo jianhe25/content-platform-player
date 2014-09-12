@@ -123,15 +123,14 @@
 
 .caption {
 	position: absolute;
-	bottom: 20%;
+	bottom: 10%;
 	color: #FFCC00;
 	font-size: 16px;
 	background-color: #000000;
-
 }
 
 .edit-bar {
-	margin-top: 100px;
+	margin-top: 10px;
 	height: 15px;
 	width: 480px;
 	background-color: #555555;

@@ -31,6 +31,8 @@ var $caption = $('.js_caption');
 var $videoContent = $('.js_video_content');
 var $videoContainer = $('.js_video_container');
 
+var $video = $('#video');
+
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
 
@@ -370,7 +372,7 @@ var editBarController = (function() {
       }).mouseup(function() {
         $editBar.unbind('mousemove');
         $leftCursor.css('background-color', oldCursorColor);
-        // videoController.pause();
+        videoController.pause();
         var time = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
         console.log("time = ", time);
         video.currentTime = time;
@@ -392,7 +394,7 @@ var editBarController = (function() {
       }).mouseup(function() {
         $editBar.unbind('mousemove');
         $rightCursor.css('background-color', oldCursorColor);
-        // videoController.pause();
+        videoController.pause();
         var time = ($rightCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
         console.log("time = ", time);
         video.currentTime = time;
@@ -401,11 +403,23 @@ var editBarController = (function() {
     });
 
     $('.js_preview_button').click(function() {
-      var time = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
-      video.currentTime = time;
-      video.currentTime = 
+      var startTime = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
+      video.currentTime = startTime;
+      var stopTime = ($rightCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
       videoController.play();
+      var stopTimer = getStopTimer(stopTime, videoController);
+      video.addEventListener('timeupdate', stopTimer);
     });
+  };
+  
+  function getStopTimer(timestamp, videoController) {
+    var stopTimer = function() {
+      if (video.currentTime > timestamp) {
+        videoController.pause();
+        video.removeEventListener('timeupdate', stopTimer);
+      }
+    }
+    return stopTimer;
   };
 
   return my;
