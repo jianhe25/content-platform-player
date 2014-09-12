@@ -2,38 +2,38 @@ $(document).ready(function(){
   
 // Video
 var video = document.getElementById('video');
-var videoContainer = document.getElementsByClassName('js_video_container').item(0);
+var videoContainer = document.getElementsByClassName('js-video-container').item(0);
 
 console.log('video-container:', videoContainer);
 
 // Buttons
-var $playButton = $('.js_play_pause');
-var $volumeIndicator = $('.js_volume_indicator');
+var $playButton = $('.js-play-pause');
+var $volumeIndicator = $('.js-volume-indicator');
 
 // Sliders
 var $seekBar = $('.seek-bar');
-var $cursor = $('.js_cursor');
-var $progressBar = $('.js_progress_bar');
-var $volumeBar = $('.js_volume_bar');
-var $volumeBarInner = $('.js_volume_bar_inner');
+var $cursor = $('.js-cursor');
+var $progressBar = $('.js-progress-bar');
+var $volumeBar = $('.js-volume-bar');
+var $volumeBarInner = $('.js-volume-bar-inner');
 
-var $fullScreenButton = $('.js_full_screen');
-var $addAdbreakButton = $('.js_add_adbreak');
-var $timeIndicatorSpent = $('.js_time_spent');
-var $timeIndicatorTotal = $('.js_time_total');
+var $fullScreenButton = $('.js-full-screen');
+var $addAdbreakButton = $('.js-add-adbreak');
+var $timeIndicatorSpent = $('.js-time-spent');
+var $timeIndicatorTotal = $('.js-time-total');
 
-var $adbreakHandler = $('.js_adbreak_handler');
-var $adbreakButton = $('.js_adbreak_button');
-var $adbreakRemove = $('.js_adbreak_remove');
-var $captionHandler = $('.js_caption_handler');
-var $captionTimestamp = $('.js_caption_timestamp');
-var $caption = $('.js_caption');
-var $videoContent = $('.js_video_content');
-var $videoContainer = $('.js_video_container');
+var $adbreakHandler = $('.js-adbreak-handler');
+var $adbreakButton = $('.js-adbreak-button');
+var $adbreakRemove = $('.js-adbreak-remove');
+var $captionHandler = $('.js-caption-handler');
+var $captionTimestamp = $('.js-caption-timestamp');
+var $caption = $('.js-caption');
+var $videoContent = $('.js-video-content');
+var $videoContainer = $('.js-video-container');
 
 var $video = $('#video');
 
-var $thumbnailCanvas = $(".js_thumbnail_canvas");
+var $thumbnailCanvas = $(".js-thumbnail-canvas");
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
 
@@ -124,7 +124,7 @@ var seekBarController = {
     $progressBar.update = function(value) {
       $(this).css('width', value);
     };
-    $seekBar.on('dblclick', '.js_adbreak', this.onSeekBarDoubleClick);
+    $seekBar.on('dblclick', '.js-adbreak', this.onSeekBarDoubleClick);
   },
   onSeekBarClick: function(e) {
     var offsetX = e.pageX - $(this).offset().left;
@@ -134,7 +134,9 @@ var seekBarController = {
   },
   onSeekBarMouseMove: function(e) {
     var offsetX = e.pageX - $(this).offset().left;
+    var time = video.duration * (offsetX / $(this).width());
     $cursor.move(offsetX);
+    $cursor.children('.cursor-time').text(utils.convertValueToTime(time));
   },
   onCursorMouseMove: function(e) {
     e.stopPropagation();
@@ -207,20 +209,20 @@ var adBreakController = {
     position = parseInt(position) - 1;
     console.log('position: ' + position);
     this.numAdbreaks++;
-    var $new_adbreak = $('.adbreak').first().clone(/*withDataAndEvents=*/true);
-    $new_adbreak.attr('id', 'adbreak_' + this.numAdbreaks);
-    $new_adbreak.css('left', position);
-    $new_adbreak.show();
-    $new_adbreak.appendTo($seekBar);
+    var $newAdbreak = $('.adbreak').first().clone(/*withDataAndEvents=*/true);
+    $newAdbreak.attr('id', 'adbreak' + this.numAdbreaks);
+    $newAdbreak.css('left', position);
+    $newAdbreak.show();
+    $newAdbreak.appendTo($seekBar);
 
-    var $new_adbreak_handler = $adbreakHandler.clone(/*withDataAndEvents=*/true);
-    var adbreak_time = (position+1) / $seekBar.width() * video.duration;
-    $new_adbreak_handler.children('.js_adbreak_button').val( utils.convertValueToTimeMs(adbreak_time) );
-    $new_adbreak_handler.removeClass('adbreak-handler-template');
+    var $newAdbreakHandler = $adbreakHandler.clone(/*withDataAndEvents=*/true);
+    var adbreakTime = (position+1) / $seekBar.width() * video.duration;
+    $newAdbreakHandler.children('.js-adbreak-button').val( utils.convertValueToTimeMs(adbreakTime) );
+    $newAdbreakHandler.removeClass('adbreak-handler-template');
 
-    $new_adbreak_handler.data('index', this.numAdbreaks);
-    $new_adbreak_handler.appendTo($adbreakHandler.parent());
-    $new_adbreak_handler.show();
+    $newAdbreakHandler.data('index', this.numAdbreaks);
+    $newAdbreakHandler.appendTo($adbreakHandler.parent());
+    $newAdbreakHandler.show();
   },
   onAdBreakButtonClick: function(e) {
     console.log('adbreakHandler = ' + utils.convertTimeToValueMs($(this).val()) );
@@ -228,7 +230,7 @@ var adBreakController = {
   },
   onAdbreakRemoveClick: function(e) {
     var index = $(this).parent().data('index');
-    var selector = '#adbreak_' + index;
+    var selector = '#adbreak-' + index;
     console.log('selector = ' + selector);
     $(selector).remove();
     $(this).parent().remove();
@@ -281,12 +283,12 @@ var captionController = (function(){
   function prepareCaptionPanel() {
     console.log(captions.length);
     for (var i = 0; i < Math.min(20, captions.length); ++i) {
-      var $new_caption_handler = $captionHandler.clone(/*withDataAndEvents=*/true, /*deepWithDataAndEvents=*/true);
-      var new_time = utils.convertValueToTimeMs(captions[i].timestamp + 0.01);
-      $new_caption_handler.children('input').val(captions[i].line);
-      $new_caption_handler.children('.js_caption_timestamp').text(new_time);
-      $new_caption_handler.appendTo($captionHandler.parent());
-      $new_caption_handler.show();
+      var $newCaptionHandler = $captionHandler.clone(/*withDataAndEvents=*/true, /*deepWithDataAndEvents=*/true);
+      var newTime = utils.convertValueToTimeMs(captions[i].timestamp + 0.01);
+      $newCaptionHandler.children('input').val(captions[i].line);
+      $newCaptionHandler.children('.js-caption-timestamp').text(newTime);
+      $newCaptionHandler.appendTo($captionHandler.parent());
+      $newCaptionHandler.show();
     }
   };
 
@@ -340,10 +342,10 @@ var captionController = (function(){
 
 var editBarController = (function() {
   var my = {};
-  var $leftCursor = $('.js_edit_cursor_left');
-  var $rightCursor = $('.js_edit_cursor_right');
-  var $editBar = $('.js_edit_bar');
-  var $editBarInner = $('.js_edit_bar_inner');
+  var $leftCursor = $('.js-edit-cursor-left');
+  var $rightCursor = $('.js-edit-cursor-right');
+  var $editBar = $('.js-edit-bar');
+  var $editBarInner = $('.js-edit-bar-inner');
   var $leftCursorTime = $leftCursor.children('.edit-cursor-time');
   var $rightCursorTime = $rightCursor.children('.edit-cursor-time');
 
@@ -357,7 +359,7 @@ var editBarController = (function() {
     var isLeftEditbarMouseDown = false;
     var isRightEditbarMouseDown = false;
     /* Make edit-cursor draggable */
-    $editBar.on('mousedown', '.js_edit_cursor_left', function(e) {
+    $editBar.on('mousedown', '.js-edit-cursor-left', function(e) {
       isLeftEditbarMouseDown = true;
       $editBar.mousemove(function(e){
         if (e.pageX < $rightCursor.offset().left - $rightCursor.width()) {
@@ -380,7 +382,7 @@ var editBarController = (function() {
      });
     });
 
-    $editBar.on('mousedown', '.js_edit_cursor_right', function(e) {
+    $editBar.on('mousedown', '.js-edit-cursor-right', function(e) {
       $editBar.mousemove(function(e){
         if (e.pageX > $leftCursor.offset().left + $leftCursor.width()) {
           var offsetX = e.pageX - $(this).offset().left;
@@ -402,7 +404,7 @@ var editBarController = (function() {
      });
     });
 
-    $('.js_preview_button').click(function() {
+    $('.js-preview-button').click(function() {
       var startTime = ($leftCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
       video.currentTime = startTime;
       var stopTime = ($rightCursor.offset().left - $editBar.offset().left) / $editBar.width() * video.duration;
@@ -487,13 +489,13 @@ var utils = {
   },
   convertTimeToValueMs: function(time) {
     var value = 0;
-    sec_and_ms = time.split(';');
-    parts = sec_and_ms[0].split(':');
+    secAndMs = time.split(';');
+    parts = secAndMs[0].split(':');
     for (var i = 0; i < parts.length; ++i) {
       value *= 60;
       value += parseInt(parts[i]);
     }
-    value += (parseInt(sec_and_ms[1]) / 100.0);
+    value += (parseInt(secAndMs[1]) / 100.0);
     return value;
   }
 };
