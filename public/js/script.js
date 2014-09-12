@@ -33,6 +33,7 @@ var $videoContainer = $('.js_video_container');
 
 var $video = $('#video');
 
+var $thumbnailCanvas = $(".js_thumbnail_canvas");
 var videoPlayer = new HP.VideoPlayer.BaseVideoPlayer(new HP.VideoPlayer.MediaElement(document.getElementById('video')));
 
 
@@ -55,7 +56,6 @@ var videoController = (function() {
   };
   
   function onVideoTimeUpdate() {
-    console.log("video.currentTime = ", video.currentTime);
     // Calculate the slider value
     var value = (video.currentTime / video.duration) * $seekBar.width();
     // Update cursor value
@@ -280,7 +280,7 @@ var captionController = (function(){
 
   function prepareCaptionPanel() {
     console.log(captions.length);
-    for (var i = 0; i < Math.min(10, captions.length); ++i) {
+    for (var i = 0; i < Math.min(20, captions.length); ++i) {
       var $new_caption_handler = $captionHandler.clone(/*withDataAndEvents=*/true, /*deepWithDataAndEvents=*/true);
       var new_time = utils.convertValueToTimeMs(captions[i].timestamp + 0.01);
       $new_caption_handler.children('input').val(captions[i].line);
@@ -425,6 +425,25 @@ var editBarController = (function() {
   return my;
 })();
 
+var thumbnailController = (function(){
+    var my = {};
+    var scale = 0.6;
+    my.init = function() {
+        var canvas = $thumbnailCanvas[0];
+        console.log('video.videoWidth = ', $videoContent.width());
+        canvas.width = $videoContent.width() * scale;
+        canvas.height = $videoContent.height() * scale;
+        var ctx = canvas.getContext('2d');
+        ctx.font = "30px Georgia"
+        ctx.fillText('Video Thumbnail', 30, 80);
+
+        $("#camera").click(function(){
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+    }
+    return my;
+})();
+
 var utils = {
   headPaddingZero: function (num, size) {
     var s = num.toString();
@@ -485,7 +504,8 @@ var startControllers = [videoController,
                         keyController,
                         adBreakController,
                         captionController,
-                        editBarController];
+                        editBarController,
+                        thumbnailController];
 
 startControllers.forEach( function(controller) {
   controller.init();
