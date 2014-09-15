@@ -237,20 +237,6 @@ var adBreakController = {
   }
 };
 
-function getMethods(obj) {
-  var result = [];
-  for (var id in obj) {
-    try {
-      if (typeof(obj[id]) == 'function') {
-        console.log(id + ': ' + obj[id].toString());
-      }
-    } catch (err) {
-      console.log(id + ': inaccessible');
-    }
-  }
-  return result;
-}
-
 var captionController = (function(){
   var my = {};
   captions = [];
@@ -277,6 +263,9 @@ var captionController = (function(){
       video.currentTime = captionTime;
       $caption.html($(this).next().val());
       $caption.css('left', ($videoContent.width() - $caption.width()) / 2);
+    });
+    $("#copy-text").click(function(e) {
+      window.prompt("Copy to clipboard: Ctrl+C, Enter", $caption.text());
     });
   };
 
@@ -426,6 +415,7 @@ var editBarController = (function() {
 
   return my;
 })();
+
 
 var thumbnailController = (function(){
     var my = {};

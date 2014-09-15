@@ -2,6 +2,10 @@
   display: none;
 }
 
+.clear-fix {
+	clear: both;
+}
+
 /* Video play back */
 .video-container {
   font-size: 12px;
@@ -97,7 +101,8 @@
   margin-left: 10px;
 }
 
-.fa-camera {
+.fa-camera,
+.fa-file-text {
   float: right;
   margin-left: 10px;
 }
@@ -192,10 +197,11 @@
   left: -6px;
 }
 
-/* Adbreak handler and Thumbnails and Caption Handlers */
-.adbreak-and-thumbnail {
-	clear: both;
+.caption-clipped {
+	margin-top: 2%;
 }
+
+/* Adbreak handler and Thumbnails and Caption Handlers */
 
 .adbreak-handler-container {
   margin-top: 3%;
@@ -204,7 +210,7 @@
 
 .thumbnail-canvas {
   margin-top: 3%;
-  background-color: #333333;
+  background-color: #838383;
   float: right;
   color: white;
 }

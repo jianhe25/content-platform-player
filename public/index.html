@@ -12,8 +12,8 @@
 </head>
 <body>
   <main class="main-content">
+
     <div class="video-container js-video-container" alt="main video">
-      <!-- Video -->
       <video class="video-content js-video-content" id="video">
         <source src="static/videos/mikethefrog.mp4" type="video/mp4">
         <p>
@@ -22,8 +22,7 @@
       </video>
       <div class="caption js-caption">
       </div>
-
-      <!-- Video Controls -->
+      <!-- End video -->
       <div class="video-control-bar">
         <div class="seek-bar">
           <div class="progress-bar js-progress-bar"></div>
@@ -39,8 +38,8 @@
             <span class="time-slash">/</span> 
             <span class="time-total js-time-total">0</span>
           </div>
-
           <i class="js-full-screen full-screen fa fa-expand"></i>
+          <i class="fa fa-file-text" id="copy-text"></i>
           <i class="fa fa-camera" id="camera"></i>
           <div class="js-volume-bar volume-bar">
               <div class="volume-bar-inner js-volume-bar-inner"></div>
@@ -49,9 +48,11 @@
           </i>
         </div>
       </div>
+      <!-- End video Controls -->
     </div>
-    
+    <!-- End video Container -->
 
+    <!-- Other controllers -->
     <div class="edit-bar js-edit-bar">
       <div class="edit-cursor-left js-edit-cursor-left">
         <p class="edit-cursor-time">0:00</p>
@@ -61,21 +62,20 @@
         <p class="edit-cursor-time">59:00</p>
       </div>
     </div>
+
     <button class="preview-button js-preview-button">preview</button>
 
-    <div class="adbreak-and-thumbnail">
-      <div class="adbreak-handler-container">
-        <button class="js-add-adbreak">+adbreak</button>
-        <div class="js-adbreak-handler adbreak-handler hidden">
-          <input type="button" value="adbreak" class="js-adbreak-button">
-          <input type="button" value="-" class="js-adbreak-remove">
-        </div>
+    <div class="clear-fix"></div>
+    <div class="adbreak-handler-container">
+      <button class="js-add-adbreak">+adbreak</button>
+      <div class="js-adbreak-handler adbreak-handler hidden">
+        <input type="button" value="adbreak" class="js-adbreak-button">
+        <input type="button" value="-" class="js-adbreak-remove">
       </div>
-      <canvas class='thumbnail-canvas js-thumbnail-canvas'>
-        Thumbnail Image
-      </canvas>
     </div>
-
+    <canvas class="thumbnail-canvas js-thumbnail-canvas">
+      Thumbnail Image
+    </canvas>
   </main>
 
   <aside class="caption-handler-container">
